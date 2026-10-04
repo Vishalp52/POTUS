@@ -5,14 +5,15 @@ from __future__ import annotations
 import time
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.api import teammate as tm
 from app.api.engine import _iso
 from app.api.schemas import IncidentConfirmRequest
+from app.api.security import Principal, require_employee
 from app.api.state import db_audit, db_save_incident, store
 
-router = APIRouter(tags=["incidents"])
+router = APIRouter(tags=["incidents"], dependencies=[Depends(require_employee)])
 
 STORABLE = {"CONFIRMED_INCIDENT", "SIMULATED_ATTACK"}
 
@@ -38,6 +39,9 @@ def remember_incident(case: dict, disposition: str, reviewer: str) -> dict:
     }
     store.incident_meta[incident_id] = meta
     store.flagged_wallets.add(case["wallet"])
+    for other in store.cases.values():  # confirmed incident revokes the wallet's vault grants
+        if other["wallet"] == case["wallet"]:
+            other["revoked"] = True
     db_save_incident(incident_id, signature, category, disposition, evidence_hash, reviewer)
     h = db_audit(reviewer, "INCIDENT_CONFIRMED", incident_id, {"case": case["case_id"], "disposition": disposition})
     case["audit"].append({"actor": reviewer, "event": "INCIDENT_CONFIRMED", "at": _iso(time.time()), "payload_hash": h})
@@ -46,14 +50,14 @@ def remember_incident(case: dict, disposition: str, reviewer: str) -> dict:
 
 
 @router.post("/incident/confirm")
-def confirm_incident(req: IncidentConfirmRequest):
+def confirm_incident(req: IncidentConfirmRequest, who: Principal = Depends(require_employee)):
     """Store a reviewed incident signature in threat memory."""
     case = store.cases.get(req.case_id)
     if not case:
         raise HTTPException(404, "unknown case_id")
     if case.get("incident_id"):
         return {"incident_id": case["incident_id"], "status": "already_stored"}
-    return remember_incident(case, req.disposition, req.reviewer)
+    return remember_incident(case, req.disposition, who.name)
 
 
 @router.get("/incidents")

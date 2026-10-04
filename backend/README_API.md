@@ -13,7 +13,7 @@ pip install -r requirements.txt        # from repo root
 cd backend
 cp .env.example .env                   # fill in what you have
 uvicorn main:app --reload --port 8000  # docs at http://localhost:8000/docs
-python -m pytest tests -q              # 26 tests, fully offline
+python -m pytest tests -q              # 62 tests (incl. security), fully offline
 ```
 
 For a reliable recorded demo with no API keys: `GEMINI_MODE=mock`.
@@ -33,25 +33,35 @@ POST /access/request
   -> case record (employee view) + customer-safe payload
 ```
 
+## Security
+
+See **[SECURITY.md](SECURITY.md)** for the threat model. In short: wallet-ownership
+signatures, signed short-lived vault tokens, API-key roles for the employee console,
+rate limits, strict input validation, security headers, fail-closed production config,
+and layered prompt-injection defenses for Gemini.
+
+**Auth legend:** 🌐 public (rate-limited) · 🔑 employee key (`X-API-Key`) · 🛡 admin key
+
 ## Endpoints
 
 | Method | Path | Purpose |
 |---|---|---|
-| POST | `/access/request` | Full evaluation for wallet + resource + action (spec response contract) |
-| GET | `/wallet/{address}/features` | Feature vector + baseline comparisons (no side effects) |
-| POST | `/score` | Detector + rules + memory + Gemini + policy, no case / no on-chain write. Accepts `wallet` or raw `features` |
-| GET | `/wallet/{address}/risk` | Latest decision, expiry, score, reason codes |
-| POST | `/incident/confirm` | Store a reviewed incident signature in threat memory |
-| GET | `/incidents` | Incident patterns for the employee console |
-| GET | `/cases` | Case list (filter `?status=OPEN`) |
-| GET | `/cases/{id}` | Full employee investigation packet (§10 panels) |
-| POST | `/cases/{id}/review` | Analyst disposition + note; confirmed incidents enter memory |
-| GET | `/customer/status/{request_id}` | Customer-safe status + next step |
-| GET | `/access/{request_id}/challenge` | Message to sign for a CHALLENGE |
-| POST | `/access/{request_id}/verify` | Wallet signature (personal_sign) resolves a CHALLENGE |
-| GET | `/vault/research-vault?request_id=&wallet=` | The protected resource; 403 unless authorized |
-| GET | `/demo/scenarios` · POST `/demo/reset` | Deterministic scenarios A–F; reset to known state |
-| GET | `/health` | Model, Gemini, data-source, registry status |
+| GET 🌐 | `/auth/nonce?wallet=` | One-time message for the wallet to sign |
+| POST 🌐 | `/access/request` | Full evaluation for wallet + resource + action. Send `nonce` + `signature` to prove ownership (required in production). ALLOW returns an `access_token` |
+| GET 🔑 | `/wallet/{address}/features` | Feature vector + baseline comparisons (no side effects) |
+| POST 🔑 | `/score` | Detector + rules + memory + Gemini + policy, no case / no on-chain write. Accepts `wallet` or raw `features` |
+| GET 🔑 | `/wallet/{address}/risk` | Latest decision, expiry, score, reason codes |
+| POST 🔑 | `/incident/confirm` | Store a reviewed incident signature in threat memory |
+| GET 🔑 | `/incidents` | Incident patterns for the employee console |
+| GET 🔑 | `/cases` | Case list (filter `?status=OPEN`) |
+| GET 🔑 | `/cases/{id}` | Full employee investigation packet (§10 panels) |
+| POST 🔑 | `/cases/{id}/review` | Analyst disposition + note (reviewer = API-key owner); confirmed incidents enter memory |
+| GET 🌐 | `/customer/status/{request_id}` | Customer-safe status + next step |
+| GET 🌐 | `/access/{request_id}/challenge` | One-time, expiring message to sign for a CHALLENGE |
+| POST 🌐 | `/access/{request_id}/verify` | `{nonce, signature}` resolves a CHALLENGE and returns an `access_token` |
+| GET 🌐 | `/vault/research-vault` | Protected resource. `Authorization: Bearer <access_token>`; re-checks live case state |
+| GET · POST 🛡 | `/demo/scenarios` · `/demo/reset` | Deterministic scenarios A–F; reset (admin). Disabled in production |
+| GET 🌐 / 🔑 | `/health` · `/health/details` | Liveness only · full status (employee) |
 
 ## Demo scenarios (labeled SIMULATED)
 
@@ -74,7 +84,9 @@ with `CONFIRMED_INCIDENT` → E (similarity ~0.91, escalates).
 
 * Decision codes on-chain: `0 ALLOW, 1 CHALLENGE, 2 REVIEW, 3 RESTRICT`.
 * Customer UI should only render the `customer` object; the employee UI uses `/cases/{id}`.
-* `X-Actor` header (optional) is recorded in the audit trail. No auth on employee routes yet (PoC).
+* Wallet sign-in: `GET /auth/nonce?wallet=` → `signMessage(message)` (wagmi/viem) → send `nonce` + `signature` with `/access/request`.
+* Vault: send `Authorization: Bearer <access_token>` from the ALLOW (or challenge-verify) response.
+* Employee console: send `X-API-Key`. Never ship the key in public frontend code; put it behind the console's own login or a server-side proxy.
 
 ## Compatibility with teammate modules
 

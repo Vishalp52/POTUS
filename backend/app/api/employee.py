@@ -4,17 +4,18 @@ from __future__ import annotations
 
 import time
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.api import teammate as tm
 from app.api.engine import _iso, components
 from app.api.incidents import STORABLE, remember_incident
 from app.api.schemas import ReviewRequest
+from app.api.security import Principal, require_employee
 from app.api.state import db_audit, store
 from app.features.baselines import PopulationStats
 from app.features.schemas import MODEL_FEATURES
 
-router = APIRouter(tags=["employee"])
+router = APIRouter(tags=["employee"], dependencies=[Depends(require_employee)])
 
 ACTIONS = ["CONFIRMED_INCIDENT", "SIMULATED_ATTACK", "BENIGN", "NEEDS_MORE_EVIDENCE", "CUSTOMER_VERIFIED"]
 
@@ -117,7 +118,7 @@ def case_packet(case: dict) -> dict:
 
 
 @router.get("/cases")
-def list_cases(status: str | None = Query(None), limit: int = Query(50, le=500)):
+def list_cases(status: str | None = Query(None, pattern="^(OPEN|CLOSED|RESOLVED)$"), limit: int = Query(50, ge=1, le=500)):
     cases = sorted(store.cases.values(), key=lambda c: -c["created_at_ts"])
     if status:
         cases = [c for c in cases if c["status"] == status.upper()]
@@ -138,7 +139,7 @@ def get_case(case_id: str):
 
 
 @router.post("/cases/{case_id}/review")
-def review_case(case_id: str, req: ReviewRequest):
+def review_case(case_id: str, req: ReviewRequest, who: Principal = Depends(require_employee)):
     """Record analyst disposition / notes; confirmed incidents enter threat memory."""
     case = store.cases.get(case_id)
     if not case:
@@ -146,13 +147,13 @@ def review_case(case_id: str, req: ReviewRequest):
     now = time.time()
     incident = None
     if req.disposition in STORABLE and not case.get("incident_id"):
-        incident = remember_incident(case, req.disposition, req.reviewer)
+        incident = remember_incident(case, req.disposition, who.name)
     if req.disposition == "CUSTOMER_VERIFIED":
         case["resolved"] = True
         case["expires_at_ts"] = max(case["expires_at_ts"], now + 600)
     case["status"] = {"NEEDS_MORE_EVIDENCE": "OPEN", "CUSTOMER_VERIFIED": "RESOLVED"}.get(req.disposition, "CLOSED")
-    review = {"reviewer": req.reviewer, "disposition": req.disposition, "note": req.note, "at": _iso(now)}
+    review = {"reviewer": who.name, "disposition": req.disposition, "note": req.note, "at": _iso(now)}
     case["reviews"].append(review)
-    h = db_audit(req.reviewer, "CASE_REVIEWED", case_id, review)
-    case["audit"].append({"actor": req.reviewer, "event": "CASE_REVIEWED", "at": _iso(now), "payload_hash": h})
+    h = db_audit(who.name, "CASE_REVIEWED", case_id, review)
+    case["audit"].append({"actor": who.name, "event": "CASE_REVIEWED", "at": _iso(now), "payload_hash": h})
     return {"case_id": case_id, "status": case["status"], "review": review, "incident": incident}

@@ -20,6 +20,7 @@ import yaml
 
 from app.api import teammate as tm
 from app.api.messages import customer_payload
+from app.api.security import issue_access_token, sanitize_for_gemini
 from app.api.settings import settings
 from app.api.state import AccessAttempt, db_audit, db_save_request, store
 from app.chain.demo_replay import scenario_for
@@ -134,7 +135,7 @@ async def run_triage(evidence: dict, rule_reasons: list[str], anomaly: float, fo
         return mock_triage(evidence, rule_reasons), "mock"
     if c.gemini is None or getattr(c.gemini, "client", None) is None:
         return None, "unavailable"
-    packet = {k: v for k, v in evidence.items() if k not in ("wallet",)}  # bounded packet, no identity
+    packet = sanitize_for_gemini(evidence)  # allowlisted typed fields only: no identity, no free text
     try:
         triage = await asyncio.wait_for(
             asyncio.to_thread(lambda: asyncio.run(c.gemini.triage(packet))),
@@ -150,7 +151,8 @@ async def run_triage(evidence: dict, rule_reasons: list[str], anomaly: float, fo
 
 # ------------------------------------------------------------------ core
 def new_request_id() -> str:
-    return "req_" + datetime.now(timezone.utc).strftime("%y%m%d%H%M%S") + secrets.token_hex(3).upper()
+    # 96 bits of randomness: request IDs are not guessable
+    return "req_" + datetime.now(timezone.utc).strftime("%y%m%d%H%M%S") + secrets.token_hex(12).upper()
 
 
 def _iso(ts: float) -> str:
@@ -258,7 +260,8 @@ def public_signals(scored: dict[str, Any]) -> dict[str, Any]:
 
 
 async def evaluate_access(wallet: str, resource_id: str, action: str, demo_scenario: Optional[str] = None,
-                          simulate_ai_outage: bool = False, actor: str = "api") -> dict[str, Any]:
+                          simulate_ai_outage: bool = False, actor: str = "api",
+                          wallet_verified: bool = False, ownership_required: bool = False) -> dict[str, Any]:
     """Full loop for POST /access/request: score, persist case, write evidence, gate."""
     c = components()
     now = time.time()
@@ -284,11 +287,16 @@ async def evaluate_access(wallet: str, resource_id: str, action: str, demo_scena
     onchain = await asyncio.to_thread(c.registry.publish_minimal_record, wallet, scored["risk_score"], int(expires), evidence_hash, decision)
 
     customer = customer_payload(request_id, decision, scored["policy_customer"])
+    # Vault token only for ALLOW, and only when wallet ownership is proven (or not required)
+    access_token = None
+    if decision == "ALLOW" and (wallet_verified or not ownership_required):
+        access_token = issue_access_token(request_id, wallet, resource_id, expires)
     response = {
         "request_id": request_id, "wallet": wallet, "resource_id": resource_id, "action": action,
         "risk_score": scored["risk_score"], "decision": decision, "expires_at": _iso(expires),
         "signals": public_signals(scored), "reason_codes": scored["reason_codes"],
         "customer": customer, "evidence_hash": evidence_hash, "onchain": onchain, "simulated": bundle.simulated,
+        "wallet_verified": wallet_verified, "access_token": access_token,
     }
 
     case = {
@@ -296,12 +304,18 @@ async def evaluate_access(wallet: str, resource_id: str, action: str, demo_scena
         "action": action, "created_at": _iso(now), "created_at_ts": now, "expires_at_ts": expires,
         "status": "OPEN" if decision != "ALLOW" else "CLOSED",
         "decision": decision, "resolved": False,
-        "scored": scored, "bundle": bundle.model_dump(), "response": response,
+        "scored": scored, "bundle": bundle.model_dump(),
+        "response": {k: v for k, v in response.items() if k != "access_token"},  # never persist bearer tokens
         "activity": {"source": activity.source, "notes": activity.notes, "simulated": activity.simulated,
                      "txs": [t.__dict__ for t in sorted(activity.txs, key=lambda t: -t.timestamp)[:25]]},
         "scenario": scen.key if scen else None, "reviews": [], "audit": [],
+        "wallet_verified": wallet_verified,
     }
     with store.lock:
+        if decision in ("REVIEW", "RESTRICT"):  # escalation revokes this wallet's earlier vault grants
+            for other in store.cases.values():
+                if other["wallet"] == wallet:
+                    other["revoked"] = True
         store.cases[request_id] = case
     store.record_attempt(AccessAttempt(request_id, wallet, resource_id, now, decision))
 

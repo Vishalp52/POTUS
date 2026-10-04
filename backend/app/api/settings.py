@@ -66,7 +66,38 @@ class Settings:
     oracle_private_key: str = field(default_factory=lambda: os.getenv("ORACLE_PRIVATE_KEY", ""))
 
     model_path: str = field(default_factory=lambda: os.getenv("MODEL_PATH", str(BACKEND_DIR / "app" / "models" / "artifacts" / "isolation_forest.joblib")))
-    cors_origins: str = field(default_factory=lambda: os.getenv("CORS_ORIGINS", "*"))
+    cors_origins: str = field(default_factory=lambda: os.getenv("CORS_ORIGINS", "http://localhost:3000"))
+
+    # ---- security ---------------------------------------------------------------
+    # development | production. Production fails closed: keys + wallet signatures required,
+    # demo endpoints and /docs disabled unless explicitly enabled.
+    app_env: str = field(default_factory=lambda: os.getenv("APP_ENV", "development").lower())
+    # "name:key,name2:key2" - employee console keys; reviewer identity comes from the key, not the request body
+    employee_keys: str = field(default_factory=lambda: os.getenv("POTUS_EMPLOYEE_KEYS", ""))
+    admin_key: str = field(default_factory=lambda: os.getenv("POTUS_ADMIN_KEY", ""))
+    token_secret: str = field(default_factory=lambda: os.getenv("TOKEN_SECRET", ""))
+    require_wallet_signature_env: str = field(default_factory=lambda: os.getenv("REQUIRE_WALLET_SIGNATURE", ""))
+    enable_demo_env: str = field(default_factory=lambda: os.getenv("ENABLE_DEMO", ""))
+    trust_proxy_headers: bool = field(default_factory=lambda: os.getenv("TRUST_PROXY_HEADERS", "false").lower() == "true")
+    max_body_bytes: int = field(default_factory=lambda: _env_int("MAX_BODY_BYTES", 32_768))
+    nonce_ttl_seconds: int = field(default_factory=lambda: _env_int("NONCE_TTL_SECONDS", 300))
+    rate_limit_per_minute: int = field(default_factory=lambda: _env_int("RATE_LIMIT_PER_MINUTE", 30))
+
+    @property
+    def production(self) -> bool:
+        return self.app_env == "production"
+
+    @property
+    def require_wallet_signature(self) -> bool:
+        if self.require_wallet_signature_env:
+            return self.require_wallet_signature_env.lower() == "true"
+        return self.production
+
+    @property
+    def demo_enabled(self) -> bool:
+        if self.enable_demo_env:
+            return self.enable_demo_env.lower() == "true"
+        return not self.production
 
 
 settings = Settings()

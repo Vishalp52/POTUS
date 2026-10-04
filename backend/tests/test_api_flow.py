@@ -14,8 +14,8 @@ def req(client, wallet, **kw):
 
 
 def test_health(client):
-    h = client.get("/health").json()
-    assert h["status"] == "ok"
+    assert client.get("/health").json() == {"status": "ok"}
+    h = client.get("/health/details").json()
     assert h["model"]["model"] == "IsolationForest"
 
 
@@ -46,7 +46,7 @@ def test_gemini_outage_still_decides(client, scenarios):
 def test_threat_memory_raises_recurrence(client, scenarios):
     before = req(client, scenarios["E"]["wallet"])
     c = req(client, scenarios["C"]["wallet"])
-    out = client.post(f"/cases/{c['request_id']}/review", json={"disposition": "CONFIRMED_INCIDENT", "reviewer": "t"}).json()
+    out = client.post(f"/cases/{c['request_id']}/review", json={"disposition": "CONFIRMED_INCIDENT"}).json()
     assert out["incident"]["incident_id"]
     client.post("/demo/reset")  # clear access history but threat memory is also cleared -> re-confirm
     c = req(client, scenarios["C"]["wallet"])
@@ -77,28 +77,39 @@ def test_customer_payload_has_no_leakage(client, scenarios):
         assert set(payload) == {"request_id", "decision", "status", "title", "message", "next_action", "support_code"}
 
 
+def bearer(tok):
+    return {"Authorization": f"Bearer {tok}"}
+
+
 def test_vault_gating(client, scenarios):
     a = req(client, scenarios["A"]["wallet"])
-    ok = client.get(f"/vault/research-vault", params={"request_id": a["request_id"], "wallet": a["wallet"]})
+    assert a["access_token"]
+    ok = client.get("/vault/research-vault", headers=bearer(a["access_token"]))
     assert ok.status_code == 200 and ok.json()["data"]["records"]
     c = req(client, scenarios["C"]["wallet"])
-    blocked = client.get(f"/vault/research-vault", params={"request_id": c["request_id"], "wallet": c["wallet"]})
-    assert blocked.status_code == 403
-    wrong = client.get(f"/vault/research-vault", params={"request_id": a["request_id"], "wallet": c["wallet"]})
-    assert wrong.status_code == 403
+    assert c["access_token"] is None
+    assert client.get("/vault/research-vault").status_code == 401
+
+
+def sign(acct, msg):
+    sig = acct.sign_message(encode_defunct(text=msg)).signature.hex()
+    return sig if sig.startswith("0x") else "0x" + sig
 
 
 def test_challenge_signature_flow(client):
     acct = Account.create()
     r = req(client, acct.address, demo_scenario="B")
     assert r["decision"] == "CHALLENGE", r
-    msg = client.get(f"/access/{r['request_id']}/challenge").json()["message"]
-    bad = Account.create().sign_message(encode_defunct(text=msg)).signature.hex()
-    assert client.post(f"/access/{r['request_id']}/verify", json={"signature": bad}).status_code == 403
-    sig = acct.sign_message(encode_defunct(text=msg)).signature.hex()
-    v = client.post(f"/access/{r['request_id']}/verify", json={"signature": sig})
+    ch = client.get(f"/access/{r['request_id']}/challenge").json()
+    bad = sign(Account.create(), ch["message"])
+    assert client.post(f"/access/{r['request_id']}/verify", json={"nonce": ch["nonce"], "signature": bad}).status_code == 401
+    # nonce was consumed by the failed attempt -> must fetch a fresh challenge
+    ch = client.get(f"/access/{r['request_id']}/challenge").json()
+    good = {"nonce": ch["nonce"], "signature": sign(acct, ch["message"])}
+    v = client.post(f"/access/{r['request_id']}/verify", json=good)
     assert v.status_code == 200 and v.json()["decision"] == "RESOLVED"
-    vault = client.get("/vault/research-vault", params={"request_id": r["request_id"], "wallet": acct.address})
+    assert client.post(f"/access/{r['request_id']}/verify", json=good).status_code == 409  # no replay
+    vault = client.get("/vault/research-vault", headers=bearer(v.json()["access_token"]))
     assert vault.status_code == 200
 
 

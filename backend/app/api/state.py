@@ -24,7 +24,7 @@ from app.features.schemas import MODEL_FEATURES
 
 log = logging.getLogger("potus.state")
 
-FAILED_DECISIONS = {"CHALLENGE", "REVIEW", "RESTRICT"}
+FAILED_DECISIONS = {"CHALLENGE", "REVIEW", "RESTRICT", "AUTH_FAILED"}
 
 
 @dataclass

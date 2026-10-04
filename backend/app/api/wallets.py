@@ -5,18 +5,21 @@ import asyncio
 import time
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, Path, Query
+from fastapi import APIRouter, Depends, HTTPException, Path, Query
 
 from app.api.engine import (
     _iso, bundle_from_features, build_bundle, components, public_signals, score_bundle,
 )
 from app.api.messages import customer_payload
 from app.api.schemas import ADDRESS_PATTERN, ScoreRequest
+from app.api.security import rate_limit, require_employee
 from app.api.state import store
 from app.chain.demo_replay import scenario_for
 from app.chain.source import get_wallet_activity
 
-router = APIRouter(tags=["wallets"])
+# Employee-only: exposing features/scores publicly would let an attacker probe the
+# detector and tune behavior to stay under thresholds (model-evasion / oracle attack).
+router = APIRouter(tags=["wallets"], dependencies=[Depends(require_employee), rate_limit("score")])
 
 ZERO = "0x0000000000000000000000000000000000000000"
 
@@ -24,8 +27,8 @@ ZERO = "0x0000000000000000000000000000000000000000"
 @router.get("/wallet/{address}/features")
 async def wallet_features(
     address: str = Path(..., pattern=ADDRESS_PATTERN),
-    resource_id: str = Query("research-vault"),
-    demo_scenario: Optional[str] = Query(None, pattern="^[A-Fa-f]$"),
+    resource_id: str = Query("research-vault", pattern=r"^[a-z0-9][a-z0-9_-]{0,63}$"),
+    demo_scenario: Optional[str] = Query(None, pattern="^[A-F]$"),
 ):
     """Normalized feature vector + baseline comparisons (does not log an access attempt)."""
     now = time.time()
