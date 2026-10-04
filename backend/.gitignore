@@ -1,0 +1,6 @@
+.env
+*.db
+app/models/artifacts/
+tests/.test_potus.db
+__pycache__/
+.pytest_cache/
