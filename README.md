@@ -12,8 +12,8 @@ This is a full copy of the supplied repository with the completed backend change
 | 4: Statistical detector | Seeded IsolationForest; exported trained artifact; atomic saving; training/runtime compatibility checks; training CLI and calibration report | Repeatability, anomaly separation, reload and input-validation tests |
 | 5: Threat memory | Reviewed incident persistence/reload; provenance; stable finite cosine matching; duplicate rejection; defensive vector copies | Persistence, poisoning, recurrence and vector validation tests |
 | 6: Gemini interpreter | Real asynchronous GenerateContent SDK integration (optional Interactions); strict schema; versioned prompt; privacy filtering; configured typology corroboration; deadline, cancellation and fallback; bounded output | Actual SDK over offline HTTP transport, success/401/429/503, malformed responses and timeout tests |
-| 7: Risk fusion | Deterministic weighted risk; validated configuration; AI capped at 20 points; fallback renormalization; review guardrails | Boundaries, invalid weights/scores, AI authority and integration tests |
-| 8: Policy engine | Existing code retained unchanged; not newly implemented | Existing compatibility tests retained |
+| 7: Risk fusion | Deterministic weighted risk computed on exact decimals with x.5 rounded up; validated configuration; AI capped at 20 points; fallback renormalization; review guardrails | Boundaries, invalid weights/scores, AI authority, decimal-exact reference grid and integration tests |
+| 8: Policy engine (spec §7) | Validated thresholds; uncertain AI routes to REVIEW but never lowers a RESTRICT that anomaly + rules + threat memory reach alone; RESTRICT held for its TTL until expiry or analyst resolution; `risk_evaluations` decision record with reason codes; employee/customer reason-code text | `backend/tests/test_section7_policy.py` |
 
 The existing stage-9 registry adapter and API support for employee/customer views
 are retained. This delivery does not add a frontend, Solidity contract, deployment,
@@ -134,7 +134,10 @@ and [Google Python SDK](https://github.com/googleapis/python-genai).
   labeled low confidence. See `backend/README_API.md` for retrieval limits.
 - Cosine memory compares deviation direction, not attack magnitude. Only reviewed
   or explicitly simulated signatures should enter it.
-- The stage-8 policy file and its threshold configuration were preserved byte-for-byte.
+- `risk.yaml` is unchanged. Thresholds, `restrict_ttl_minutes` (1-1440) and
+  `low_confidence_high_severity_action` (must be REVIEW) are now validated at startup.
+- A confident Gemini label still moves the fused score by up to its 15-point weight,
+  in either direction, as the spec formula defines.
 
 ## Final API completion pass
 

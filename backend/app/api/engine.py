@@ -24,7 +24,7 @@ from app.api import teammate as tm
 from app.api.messages import customer_payload
 from app.api.security import issue_access_token, sanitize_for_gemini
 from app.api.settings import settings
-from app.api.state import AccessAttempt, db_audit, db_save_request, store
+from app.api.state import AccessAttempt, db_audit, db_save_evaluation, db_save_request, store
 from app.chain.demo_replay import scenario_for
 from app.chain.registry import RegistryWriter
 from app.chain.source import get_wallet_activity
@@ -55,28 +55,45 @@ def load_risk_config() -> dict[str, Any]:
     import math
     if isinstance(confidence, bool) or not isinstance(confidence, (float, int)) or not math.isfinite(confidence) or not 0 <= confidence <= 1:
         raise ValueError("minimum Gemini confidence must be between 0 and 1")
+    ttl = controls.get("restrict_ttl_minutes", 20)
+    if isinstance(ttl, bool) or not isinstance(ttl, int) or not 1 <= ttl <= 1440:
+        raise ValueError("restrict_ttl_minutes must be an integer between 1 and 1440")
+    if controls.get("low_confidence_high_severity_action", "REVIEW") != "REVIEW":
+        raise ValueError("low_confidence_high_severity_action must be REVIEW (spec §7)")
+    # Construct once so invalid weights or thresholds stop startup instead of failing per request.
+    tm.RiskFusionEngine(weights=config.get("weights"))
+    tm.PolicyEngine(thresholds=config.get("thresholds"))
     return config
 
 
 class Components:
     def __init__(self):
         self.config = load_risk_config()
-        if tm.EvaluatorService is not None:
-            ev = tm.EvaluatorService(self.config)       # teammate wiring (rules/fusion/policy/gemini/threat store)
-            self.rules, self.fusion, self.policy = ev.rules, ev.fusion, ev.policy
-            self.gemini = ev.gemini if tm.GeminiTriageClient is not None else None
-        else:
-            self.rules = tm.RuleEngine()
-            self.fusion = tm.RiskFusionEngine(weights=self.config.get("weights"))
-            self.policy = tm.PolicyEngine(thresholds=self.config.get("thresholds"))
-            self.gemini = tm.GeminiTriageClient() if tm.GeminiTriageClient else None
+        self.rules = tm.RuleEngine()
+        self.fusion = tm.RiskFusionEngine(weights=self.config.get("weights"))
+        self.policy = tm.PolicyEngine(thresholds=self.config.get("thresholds"))
+        self.gemini = self._gemini_client()
         controls = self.config.get("controls", {}) or {}
-        self.restrict_ttl = int(controls.get("restrict_ttl_minutes", 20)) * 60
+        self.restrict_ttl = controls.get("restrict_ttl_minutes", 20) * 60
         min_conf = controls.get("gemini_min_confidence_for_severity")
         if min_conf is not None:
             self.fusion.min_gemini_confidence = float(min_conf)
         self.detector = load_detector()
         self.registry = RegistryWriter()
+
+    @staticmethod
+    def _gemini_client() -> Any:
+        if tm.GeminiTriageClient is None:
+            return None
+        try:
+            return tm.GeminiTriageClient()
+        except ValueError:
+            # A client setting typo must not take down the deterministic path when
+            # live Gemini is not in use; in auto mode it still fails startup.
+            if settings.gemini_mode == "auto":
+                raise
+            log.warning("Gemini client settings invalid; mode %s does not use it", settings.gemini_mode)
+            return None
 
     @property
     def weights(self) -> dict[str, float]:
@@ -247,21 +264,25 @@ async def score_bundle(bundle: FeatureBundle, force_outage: bool = False) -> dic
         anomaly_score=anomaly, rule_score=rule_score, pattern_similarity=sim,
         gemini_triage=triage, rule_reasons=rule_reasons,
     )
-    result = c.policy.evaluate(risk, reasons, forced_review)
+    deterministic = c.fusion.deterministic_score(anomaly, float(rule_score), sim)
+    result = c.policy.evaluate(risk, reasons, forced_review, deterministic_score=deterministic)
     # Missing chain evidence must not look like a clean, inactive wallet.
     # Keep stronger deterministic restrictions, but hold otherwise permissive
-    # decisions for review until evidence can be retrieved.
+    # decisions for review until evidence can be retrieved. The fused score is
+    # kept as computed so the decision record still reproduces it.
     data_review = bundle.data_source == "none" and result["decision"] in {"ALLOW", "CHALLENGE"}
     if data_review:
-        result = c.policy.evaluate(max(risk, c.policy.challenge_max + 1),
-                                   [*reasons, "CHAIN_DATA_UNAVAILABLE"], True)
+        result = c.policy.evaluate(risk, [*reasons, tm.ReasonCode.CHAIN_DATA_UNAVAILABLE], True,
+                                   deterministic_score=deterministic)
     reason_codes = sorted(result["reason_codes"])
 
     guardrails = []
     if data_review:
         guardrails.append("Chain evidence unavailable -> REVIEW until evidence can be retrieved")
-    if forced_review:
+    if forced_review and result["decision"] == "REVIEW":
         guardrails.append("AI uncertainty or explicit review request -> REVIEW")
+    elif forced_review:
+        guardrails.append("AI review request did not downgrade RESTRICT: deterministic signals alone reach RESTRICT")
     if rule_score >= 0.75 and anomaly >= 0.80:
         guardrails.append("Strong hard rules + high anomaly -> minimum REVIEW score floor (55)")
     if triage is None and gemini_status not in ("not_triggered",):
@@ -271,7 +292,7 @@ async def score_bundle(bundle: FeatureBundle, force_outage: bool = False) -> dic
         "anomaly": anomaly, "rule_score": round(float(rule_score), 4), "rule_codes": rule_codes,
         "similarity": sim, "matched_incident": matched or None,
         "triage": triage, "gemini_status": gemini_status, "prompt_version": PROMPT_VERSION,
-        "risk_score": int(result["risk_score"]), "decision": result["decision"],
+        "risk_score": int(result["risk_score"]), "deterministic_score": deterministic, "decision": result["decision"],
         "reason_codes": reason_codes, "policy_customer": result.get("customer", {}),
         "forced_review": forced_review or data_review, "guardrails": guardrails, "evidence": evidence,
         "breakdown": component_breakdown(anomaly, float(rule_score), sim, triage),
@@ -288,6 +309,15 @@ def public_signals(scored: dict[str, Any]) -> dict[str, Any]:
             "category": tm.normalize_category(t.category), "confidence": t.confidence, "semantic_risk": t.semantic_risk},
         "gemini_status": scored["gemini_status"],
     }
+
+
+def active_restriction_until(wallet: str, now: float) -> Optional[float]:
+    """Latest expiry of an open, unexpired RESTRICT case for this wallet, if any."""
+    with store.lock:
+        expiries = [case["expires_at_ts"] for case in store.cases.values()
+                    if case["wallet"] == wallet and case["decision"] == "RESTRICT" and case["status"] == "OPEN"
+                    and not case.get("resolved") and case["expires_at_ts"] > now]
+    return max(expiries, default=None)
 
 
 async def evaluate_access(wallet: str, resource_id: str, action: str, demo_scenario: Optional[str] = None,
@@ -307,6 +337,13 @@ async def evaluate_access(wallet: str, resource_id: str, action: str, demo_scena
 
     decision = scored["decision"]
     expires = now + (c.restrict_ttl if decision == "RESTRICT" else DECISION_TTL_SECONDS)
+    # Spec §7: RESTRICT blocks the protected action for its TTL. A fresh, calmer
+    # score cannot lift it early; only expiry or analyst resolution can.
+    held_until = active_restriction_until(wallet, now)
+    if held_until is not None and decision != "RESTRICT":
+        decision, expires = "RESTRICT", held_until
+        scored.update(decision=decision, policy_customer=c.policy.customer_message(decision),
+                      guardrails=[*scored["guardrails"], f"Active RESTRICT on this wallet until {_iso(held_until)}"])
 
     hash_payload = {
         "request_id": request_id, "wallet": wallet, "resource_id": resource_id, "action": action,
@@ -351,7 +388,15 @@ async def evaluate_access(wallet: str, resource_id: str, action: str, demo_scena
     store.record_attempt(AccessAttempt(request_id, wallet, resource_id, now, decision))
 
     db_save_request(request_id, wallet, resource_id, action)
-    audit_hash = db_audit(actor, "ACCESS_EVALUATED", request_id, {"decision": decision, "evidence_hash": evidence_hash})
+    db_save_evaluation(
+        request_id=request_id, wallet=wallet, component_scores=scored["breakdown"],
+        deterministic_score=scored["deterministic_score"], risk_score=scored["risk_score"], decision=decision,
+        reason_codes=scored["reason_codes"], gemini_status=scored["gemini_status"],
+        expiry=datetime.fromtimestamp(expires, tz=timezone.utc),
+    )
+    audit_hash = db_audit(actor, "ACCESS_EVALUATED", request_id, {
+        "decision": decision, "risk_score": scored["risk_score"], "reason_codes": scored["reason_codes"],
+        "evidence_hash": evidence_hash})
     case["audit"].append({"actor": actor, "event": "ACCESS_EVALUATED", "at": _iso(now), "payload_hash": audit_hash})
     return response
 

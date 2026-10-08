@@ -39,4 +39,5 @@ class EvaluatorService:
             rule_reasons=rule_reasons
         )
 
-        return self.policy.evaluate(risk_score, reasons, forced_review)
+        deterministic = self.fusion.deterministic_score(anomaly_score, rule_score, pattern_similarity)
+        return self.policy.evaluate(risk_score, reasons, forced_review, deterministic_score=deterministic)

@@ -15,6 +15,7 @@ from app.api.security import Principal, require_employee
 from app.api.state import db_audit, store
 from app.features.baselines import PopulationStats
 from app.features.schemas import MODEL_FEATURES
+from app.risk.reason_codes import describe
 
 router = APIRouter(tags=["employee"], dependencies=[Depends(require_employee)])
 
@@ -107,7 +108,9 @@ def case_packet(case: dict) -> dict:
             ],
         },
         "policy_trace": {
-            "reason_codes": s["reason_codes"], "rule_codes": s["rule_codes"], "rule_score": s["rule_score"],
+            "reason_codes": s["reason_codes"], "reason_details": [describe(code) for code in s["reason_codes"]],
+            "deterministic_score": s.get("deterministic_score"),
+            "rule_codes": s["rule_codes"], "rule_score": s["rule_score"],
             "thresholds": c.thresholds, "weights": c.weights, "guardrails": s["guardrails"],
             "forced_review": s["forced_review"],
             "note": "Deterministic code produced this decision; Gemini contributes a capped semantic term only.",

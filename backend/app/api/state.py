@@ -111,6 +111,10 @@ def db_save_request(request_id: str, wallet: str, resource_id: str, action: str)
     _safe(lambda repo, s: repo.save_request(request_id, wallet, resource_id, action))
 
 
+def db_save_evaluation(**fields) -> None:
+    _safe(lambda repo, s: repo.save_evaluation(**fields))
+
+
 def db_audit(actor: str, event_type: str, object_id: str, payload: dict) -> str:
     h = tm.AuditService.hash_payload(payload)
     _safe(lambda repo, s: repo.record_audit(actor, event_type, object_id, h))

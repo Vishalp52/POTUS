@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.db.models import AccessRequestModel, IncidentModel, AuditEventModel
+from app.db.models import AccessRequestModel, IncidentModel, AuditEventModel, RiskEvaluationModel
 
 class Repository:
     def __init__(self, session: Session):
@@ -13,6 +13,10 @@ class Repository:
             action=action
         )
         self.session.add(record)
+        self.session.commit()
+
+    def save_evaluation(self, **fields):
+        self.session.merge(RiskEvaluationModel(**fields))
         self.session.commit()
 
     def record_audit(self, actor: str, event_type: str, object_id: str, payload_hash: str):

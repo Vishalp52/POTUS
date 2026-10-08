@@ -3,6 +3,6 @@
 Keep the original module available for callers using the historical filename.
 Both imports expose the same enum class.
 """
-from app.risk.reasons_codes import ReasonCode
+from app.risk.reasons_codes import REASON_TEXT, ReasonCode, describe
 
-__all__ = ["ReasonCode"]
+__all__ = ["ReasonCode", "REASON_TEXT", "describe"]

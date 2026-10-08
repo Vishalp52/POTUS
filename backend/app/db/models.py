@@ -13,6 +13,21 @@ class AccessRequestModel(Base):
     action = Column(String)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
+class RiskEvaluationModel(Base):
+    """Spec §12 decision record: compact reason codes plus the inputs that reproduce the score."""
+    __tablename__ = "risk_evaluations"
+
+    request_id = Column(String, primary_key=True)
+    wallet = Column(String, index=True)
+    component_scores = Column(JSON)
+    deterministic_score = Column(Integer)
+    risk_score = Column(Integer)
+    decision = Column(String)
+    reason_codes = Column(JSON)
+    gemini_status = Column(String)
+    expiry = Column(DateTime)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
 class IncidentModel(Base):
     __tablename__ = "incidents"
 

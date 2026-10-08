@@ -31,7 +31,9 @@ class RuleEngine:
             points += 20.0
             triggered.append(ReasonCode.REPEATED_DENIALS)
 
-        if 0 < evidence.get("wallet_age_blocks", 0) < 1000:
+        # Evidence packets report unknown age as 0; a new or unknown wallet is cold-start too.
+        age = evidence.get("wallet_age_blocks")
+        if age is not None and age < 1000:
             triggered.append(ReasonCode.COLD_START_WALLET)
 
         normalized_score = min(1.0, points / 100.0)
