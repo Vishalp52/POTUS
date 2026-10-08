@@ -1,0 +1,95 @@
+{
+  "mode": "live",
+  "prompt_version": "potus-triage-v3",
+  "evaluated_at": "2026-10-08T01:07:33.736389+00:00",
+  "model": "gemini-flash-latest",
+  "api": "generate_content",
+  "timeout_seconds": 12.0,
+  "thinking_level": "low",
+  "packet_count": 5,
+  "accepted_triage_count": 1,
+  "limitations": "Synthetic review fixtures, not a production accuracy benchmark. Offline mode does not test Gemini semantics.",
+  "results": [
+    {
+      "id": "normal-1",
+      "simulated": true,
+      "anomaly_score": 0.0,
+      "rule_score": 0.0,
+      "risk_score": 1,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "NORMAL_OR_BENIGN",
+        "confidence": 0.95,
+        "semantic_risk": 5,
+        "supporting_indicators": [
+          "anomaly_score is 0",
+          "failed_access_count is 0",
+          "no flagged counterparties or hard flags present",
+          "activity metrics remain at or below established baselines"
+        ],
+        "benign_explanations": [
+          "Routine resource access consistent with normal baseline activity and operating patterns."
+        ],
+        "employee_summary": "Access request to the research-vault shows baseline-consistent metrics with an anomaly score of 0 and zero failed access attempts. No typology matches, flagged counterparties, or elevated risks were observed.",
+        "customer_reason_code": "NONE",
+        "requires_human_review": false
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 2.961
+    },
+    {
+      "id": "normal-2",
+      "simulated": true,
+      "anomaly_score": 0.0,
+      "rule_score": 0.0,
+      "risk_score": 0,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "fallback",
+      "triage": null,
+      "category_matches_fixture": null,
+      "elapsed_seconds": 2.285
+    },
+    {
+      "id": "normal-3",
+      "simulated": true,
+      "anomaly_score": 0.0,
+      "rule_score": 0.0,
+      "risk_score": 0,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "fallback",
+      "triage": null,
+      "category_matches_fixture": null,
+      "elapsed_seconds": 1.978
+    },
+    {
+      "id": "normal-4",
+      "simulated": true,
+      "anomaly_score": 0.0,
+      "rule_score": 0.0,
+      "risk_score": 0,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "fallback",
+      "triage": null,
+      "category_matches_fixture": null,
+      "elapsed_seconds": 1.915
+    },
+    {
+      "id": "normal-5",
+      "simulated": true,
+      "anomaly_score": 0.0,
+      "rule_score": 0.0,
+      "risk_score": 0,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "fallback",
+      "triage": null,
+      "category_matches_fixture": null,
+      "elapsed_seconds": 5.425
+    }
+  ]
+}

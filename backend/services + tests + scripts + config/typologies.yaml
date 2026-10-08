@@ -1,0 +1,15 @@
+typologies:
+  - name: ACCOUNT_TAKEOVER
+    signals:
+      - ACCESS_BURST
+      - REPEATED_DENIALS
+      - NEW_CONTRACT_SPIKE
+  - name: VALUE_DRAIN
+    signals:
+      - VALUE_OUTLIER
+      - KNOWN_PATTERN_SIMILARITY
+  - name: FLAGGED_VALUE_MOVEMENT
+    category: POTENTIAL_ILLICIT_ACTIVITY
+    signals:
+      - FLAGGED_COUNTERPARTY
+      - VALUE_OUTLIER

@@ -1,0 +1,22 @@
+{
+  "checked_at": "2026-10-08T01:12:00.556599+00:00",
+  "model": "gemini-3.5-flash-lite",
+  "checks": {
+    "access_http_200": true,
+    "live_triage_accepted": true,
+    "simulated_evidence": true,
+    "attack_held": true,
+    "no_access_token": true,
+    "vault_denied": true,
+    "employee_case_available": true,
+    "outage_returns_decision": true,
+    "outage_removes_ai": true,
+    "registry_disabled": true
+  },
+  "passed": true,
+  "live_status": "ok",
+  "live_category": "SUSPICIOUS_FRAUD_LIKE",
+  "decision": "RESTRICT",
+  "risk_score": 77,
+  "limitations": "Synthetic replay through the real API/Gemini path; temporary database; registry disabled."
+}

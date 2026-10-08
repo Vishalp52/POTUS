@@ -1,0 +1,76 @@
+{
+  "mode": "live",
+  "prompt_version": "potus-triage-v5",
+  "evaluated_at": "2026-10-08T01:13:44.334807+00:00",
+  "model": "gemini-3.5-flash",
+  "api": "generate_content",
+  "timeout_seconds": 12.0,
+  "thinking_level": "low",
+  "request_interval_seconds": 3.1,
+  "packet_count": 2,
+  "accepted_triage_count": 1,
+  "summary": {
+    "accepted_fraction": 0.5,
+    "fixture_match_count": 1,
+    "fixture_mismatch_ids": [],
+    "unavailable_ids": [
+      "typology-1"
+    ],
+    "latency_seconds": {
+      "50": 2.147,
+      "95": 11.608,
+      "100": 11.608
+    }
+  },
+  "limitations": "Synthetic review fixtures, not a production accuracy benchmark. Offline mode does not test Gemini semantics.",
+  "results": [
+    {
+      "id": "slight-1",
+      "simulated": true,
+      "anomaly_score": 0.2921,
+      "rule_score": 0.0,
+      "risk_score": 18,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "SLIGHT_ANOMALY",
+        "confidence": 0.75,
+        "semantic_risk": 30,
+        "supporting_indicators": [
+          "Access requests in a 10-minute window increased by a ratio of 2.0 compared to baseline.",
+          "Transaction count in a 10-minute window increased by a ratio of 3.0 compared to baseline.",
+          "New contract interaction ratio increased by a ratio of 1.72 compared to baseline.",
+          "Zero failed access attempts and zero flagged counterparties observed."
+        ],
+        "benign_explanations": [
+          "The user may be experiencing a period of high legitimate activity or deploying new smart contracts during a development cycle.",
+          "An automated script or dApp integration authorized by the user is executing routine transactions in quick succession."
+        ],
+        "employee_summary": "The account exhibits a slight increase in transaction frequency and access requests over short intervals, alongside a higher ratio of new contract interactions. However, there are no failed access attempts, no flagged counterparties, and the transfer value remains within normal statistical bounds (z-score 0.5). This pattern represents a slight anomaly rather than suspicious or illicit activity.",
+        "customer_reason_code": "NONE",
+        "requires_human_review": false
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 2.147
+    },
+    {
+      "id": "typology-1",
+      "simulated": true,
+      "anomaly_score": 0.9335,
+      "rule_score": 1.0,
+      "risk_score": 79,
+      "requires_review": false,
+      "reason_codes": [
+        "ACCESS_BURST",
+        "NEW_CONTRACT_SPIKE",
+        "REPEATED_DENIALS",
+        "VALUE_OUTLIER"
+      ],
+      "gemini_status": "fallback",
+      "triage": null,
+      "category_matches_fixture": null,
+      "elapsed_seconds": 11.608
+    }
+  ]
+}

@@ -1,0 +1,785 @@
+{
+  "mode": "live",
+  "prompt_version": "potus-triage-v3",
+  "evaluated_at": "2026-10-08T01:09:23.601376+00:00",
+  "model": "gemini-3.5-flash-lite",
+  "api": "generate_content",
+  "timeout_seconds": 12.0,
+  "thinking_level": "low",
+  "packet_count": 25,
+  "accepted_triage_count": 21,
+  "limitations": "Synthetic review fixtures, not a production accuracy benchmark. Offline mode does not test Gemini semantics.",
+  "results": [
+    {
+      "id": "normal-1",
+      "simulated": true,
+      "anomaly_score": 0.0,
+      "rule_score": 0.0,
+      "risk_score": 1,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "NORMAL_OR_BENIGN",
+        "confidence": 0.95,
+        "semantic_risk": 5,
+        "supporting_indicators": [
+          "anomaly_score is 0",
+          "failed_access_count is 0",
+          "no hard flags present",
+          "no matched typologies"
+        ],
+        "benign_explanations": [
+          "The observed metrics reflect standard, low-frequency interaction levels well within normal operating parameters.",
+          "Activity levels are lower than the historical baseline, indicating routine quiet periods rather than anomalous behavior."
+        ],
+        "employee_summary": "The evaluated activity displays no indicators of anomalous or suspicious behavior. All metrics are within normal bounds and no security flags were triggered.",
+        "customer_reason_code": "NONE",
+        "requires_human_review": false
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 1.447
+    },
+    {
+      "id": "normal-2",
+      "simulated": true,
+      "anomaly_score": 0.0,
+      "rule_score": 0.0,
+      "risk_score": 1,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "NORMAL_OR_BENIGN",
+        "confidence": 0.95,
+        "semantic_risk": 5,
+        "supporting_indicators": [
+          "anomaly score is zero",
+          "failed access count is zero",
+          "no hard flags present",
+          "matched typologies is empty"
+        ],
+        "benign_explanations": [
+          "routine operational activity consistent with established baselines",
+          "slight variance in contract interaction ratio within normal parameters"
+        ],
+        "employee_summary": "The analyzed behavior shows no indicators of illicit activity or significant anomalies, aligning well with normal historical baselines.",
+        "customer_reason_code": "NONE",
+        "requires_human_review": false
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 1.063
+    },
+    {
+      "id": "normal-3",
+      "simulated": true,
+      "anomaly_score": 0.0,
+      "rule_score": 0.0,
+      "risk_score": 1,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "NORMAL_OR_BENIGN",
+        "confidence": 0.95,
+        "semantic_risk": 5,
+        "supporting_indicators": [
+          "anomaly_score is zero",
+          "failed_access_count is zero",
+          "hard_flags array is empty",
+          "matched_typologies array is empty"
+        ],
+        "benign_explanations": [
+          "The observed transaction frequency and feature deltas are consistent with normal operational variance.",
+          "No hard flags or suspicious counterparties were detected."
+        ],
+        "employee_summary": "The activity exhibits no anomalous or illicit patterns. All metrics remain within expected baseline parameters.",
+        "customer_reason_code": "NONE",
+        "requires_human_review": false
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 1.259
+    },
+    {
+      "id": "normal-4",
+      "simulated": true,
+      "anomaly_score": 0.0,
+      "rule_score": 0.0,
+      "risk_score": 1,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "NORMAL_OR_BENIGN",
+        "confidence": 0.95,
+        "semantic_risk": 5,
+        "supporting_indicators": [
+          "Anomaly score is zero",
+          "Zero failed access attempts",
+          "No hard flags or matched typologies"
+        ],
+        "benign_explanations": [
+          "Normal variance in routine access requests and transaction volumes",
+          "Slight increase in access requests within expected operational parameters"
+        ],
+        "employee_summary": "The activity shows standard operational patterns with zero anomalies, failed accesses, or risk flags. The slight increase in short-term access requests falls well within normal benign variance.",
+        "customer_reason_code": "NONE",
+        "requires_human_review": false
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 8.342
+    },
+    {
+      "id": "normal-5",
+      "simulated": true,
+      "anomaly_score": 0.0,
+      "rule_score": 0.0,
+      "risk_score": 1,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "NORMAL_OR_BENIGN",
+        "confidence": 0.95,
+        "semantic_risk": 5,
+        "supporting_indicators": [
+          "Zero failed access counts",
+          "Zero anomaly score",
+          "No flagged counterparties",
+          "No hard flags present"
+        ],
+        "benign_explanations": [
+          "Standard operational variability in smart contract interactions",
+          "Routine querying and resource access within normal behavioral baselines"
+        ],
+        "employee_summary": "The observed activity shows no indicators of illicit behavior or significant anomalies. All metrics remain within normal parameters, suggesting routine operations.",
+        "customer_reason_code": "NONE",
+        "requires_human_review": false
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 1.148
+    },
+    {
+      "id": "slight-1",
+      "simulated": true,
+      "anomaly_score": 0.2921,
+      "rule_score": 0.0,
+      "risk_score": 16,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "SLIGHT_ANOMALY",
+        "confidence": 0.75,
+        "semantic_risk": 20,
+        "supporting_indicators": [
+          "Transaction count over 10 minutes increased by a factor of 3.0 compared to baseline",
+          "Access requests over 10 minutes increased by a factor of 2.0",
+          "New contract interaction ratio increased slightly to 0.3"
+        ],
+        "benign_explanations": [
+          "The user may be executing a batch of routine transactions or interacting with multiple decentralized finance protocols simultaneously.",
+          "Automated scripts or frontend dApp updates may cause temporary clustering of transaction requests."
+        ],
+        "employee_summary": "The activity shows a minor elevation in transaction frequency and new contract interactions within a short time window, but no hard flags or matched illicit typologies are present. This likely represents benign variance or normal user activity.",
+        "customer_reason_code": "NONE",
+        "requires_human_review": false
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 1.336
+    },
+    {
+      "id": "slight-2",
+      "simulated": true,
+      "anomaly_score": 0.4628,
+      "rule_score": 0.0,
+      "risk_score": 24,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "SLIGHT_ANOMALY",
+        "confidence": 0.75,
+        "semantic_risk": 20,
+        "supporting_indicators": [
+          "Increased transaction frequency over 10-minute and 1-hour windows compared to baseline",
+          "Slight elevation in new contract interaction ratio",
+          "Zero failed access attempts and no flagged counterparties"
+        ],
+        "benign_explanations": [
+          "User might be actively deploying or testing multiple smart contracts in a short time frame",
+          "Batch processing of routine operations by an automated workflow or script"
+        ],
+        "employee_summary": "The wallet exhibits a temporary increase in transaction volume and unique contract interactions compared to its baseline, but lacks any hard flags, failed access attempts, or illicit typology matches. This represents a minor behavioral anomaly consistent with active usage.",
+        "customer_reason_code": "NONE",
+        "requires_human_review": false
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 1.374
+    },
+    {
+      "id": "slight-3",
+      "simulated": true,
+      "anomaly_score": 0.5185,
+      "rule_score": 0.0,
+      "risk_score": 27,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "SLIGHT_ANOMALY",
+        "confidence": 0.75,
+        "semantic_risk": 25,
+        "supporting_indicators": [
+          "Slight increase in transaction frequency over 10-minute and 1-hour windows",
+          "Moderate rise in new contract interactions relative to baseline",
+          "Single failed access attempt observed"
+        ],
+        "benign_explanations": [
+          "User may be actively deploying or interacting with multiple smart contracts in a short burst of activity.",
+          "Automated scripts or routine multi-step protocol interactions can cause short-term spikes in transaction counts."
+        ],
+        "employee_summary": "The wallet shows a slight, temporary increase in transaction velocity and new contract interaction rates compared to its baseline, alongside a single failed access attempt. There are no hard flags or matched typologies, suggesting this is likely benign variance or routine high-frequency usage.",
+        "customer_reason_code": "NONE",
+        "requires_human_review": false
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 1.371
+    },
+    {
+      "id": "slight-4",
+      "simulated": true,
+      "anomaly_score": 0.4425,
+      "rule_score": 0.0,
+      "risk_score": 24,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "SLIGHT_ANOMALY",
+        "confidence": 0.75,
+        "semantic_risk": 25,
+        "supporting_indicators": [
+          "tx_count_10m increased to 4.0x baseline",
+          "tx_count_1h increased to 2.75x baseline",
+          "new_contract_ratio slightly elevated above baseline"
+        ],
+        "benign_explanations": [
+          "Automated batch processing or routine script execution causing temporary transaction volume spikes",
+          "User interacting with a new decentralized application requiring multiple contract interactions"
+        ],
+        "employee_summary": "The account exhibits a moderate increase in transaction frequency and new contract interactions over short time windows compared to baseline, but no hard flags or flagged counterparties are present.",
+        "customer_reason_code": "NONE",
+        "requires_human_review": false
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 1.262
+    },
+    {
+      "id": "slight-5",
+      "simulated": true,
+      "anomaly_score": 0.6054,
+      "rule_score": 0.0,
+      "risk_score": 32,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "SLIGHT_ANOMALY",
+        "confidence": 0.75,
+        "semantic_risk": 35,
+        "supporting_indicators": [
+          "Transaction count over 10m is 3x baseline",
+          "Access requests over 10m is 4x baseline",
+          "Transfer value z-score is elevated at 2.0"
+        ],
+        "benign_explanations": [
+          "User may be actively deploying and interacting with multiple smart contracts in a short burst",
+          "Increased activity could be due to automated scripts or batch processing during normal research workflows"
+        ],
+        "employee_summary": "The account shows a short-term increase in transaction frequency and access requests compared to baseline, but no hard security flags or flagged counterparties are present.",
+        "customer_reason_code": "NONE",
+        "requires_human_review": false
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 1.414
+    },
+    {
+      "id": "takeover-1",
+      "simulated": true,
+      "anomaly_score": 0.8921,
+      "rule_score": 1.0,
+      "risk_score": 76,
+      "requires_review": false,
+      "reason_codes": [
+        "ACCESS_BURST",
+        "GEMINI_FRAUD_LIKE",
+        "NEW_CONTRACT_SPIKE",
+        "REPEATED_DENIALS",
+        "VALUE_OUTLIER"
+      ],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "SUSPICIOUS_FRAUD_LIKE",
+        "confidence": 0.85,
+        "semantic_risk": 75,
+        "supporting_indicators": [
+          "High anomaly score of 0.89",
+          "Access requests spiked significantly with a ratio of 40.0",
+          "Six failed access attempts detected",
+          "Hard flags triggered for ACCESS_BURST, REPEATED_DENIALS, and VALUE_OUTLIER",
+          "Matched typology for ACCOUNT_TAKEOVER"
+        ],
+        "benign_explanations": [
+          "An automated script or CI/CD pipeline rapidly interacting with the resource",
+          "A legitimate user experiencing authentication issues due to a network or client configuration error"
+        ],
+        "employee_summary": "The account or resource exhibited a sudden burst of access requests, repeated access denials, and a high transfer value z-score, matching indicators associated with account takeover patterns.",
+        "customer_reason_code": "SECURITY_REVIEW",
+        "requires_human_review": true
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 1.537
+    },
+    {
+      "id": "takeover-2",
+      "simulated": true,
+      "anomaly_score": 0.8921,
+      "rule_score": 1.0,
+      "risk_score": 76,
+      "requires_review": false,
+      "reason_codes": [
+        "ACCESS_BURST",
+        "GEMINI_FRAUD_LIKE",
+        "NEW_CONTRACT_SPIKE",
+        "REPEATED_DENIALS",
+        "VALUE_OUTLIER"
+      ],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "SUSPICIOUS_FRAUD_LIKE",
+        "confidence": 0.85,
+        "semantic_risk": 75,
+        "supporting_indicators": [
+          "High anomaly score of 0.8921",
+          "Access requests spiked to 30 over baseline",
+          "Multiple failed access counts (4)",
+          "Transfer value z-score of 5.0 indicating extreme outlier",
+          "Hard flags triggered for ACCESS_BURST, REPEATED_DENIALS, and VALUE_OUTLIER"
+        ],
+        "benign_explanations": [
+          "An automated script or integration testing routine might be executing rapid sequential requests and triggering rate limits.",
+          "A legitimate user may be attempting urgent restructuring of assets using multiple contract interactions during a high-volatility event."
+        ],
+        "employee_summary": "The account exhibits strong behavioral anomalies consistent with suspicious fraud-like patterns, specifically an access burst and repeated denials alongside a value outlier. Human review is recommended to rule out automated script errors or unauthorized access.",
+        "customer_reason_code": "SECURITY_REVIEW",
+        "requires_human_review": true
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 1.821
+    },
+    {
+      "id": "takeover-3",
+      "simulated": true,
+      "anomaly_score": 0.8847,
+      "rule_score": 1.0,
+      "risk_score": 76,
+      "requires_review": false,
+      "reason_codes": [
+        "ACCESS_BURST",
+        "GEMINI_FRAUD_LIKE",
+        "NEW_CONTRACT_SPIKE",
+        "REPEATED_DENIALS",
+        "VALUE_OUTLIER"
+      ],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "SUSPICIOUS_FRAUD_LIKE",
+        "confidence": 0.85,
+        "semantic_risk": 75,
+        "supporting_indicators": [
+          "High anomaly score of 0.8847",
+          "5 failed access attempts indicating repeated denials",
+          "Sudden burst in access requests and transaction frequency",
+          "Value outlier with a transfer value z-score of 3.5"
+        ],
+        "benign_explanations": [
+          "Automated script or testing tool executing high-frequency requests",
+          "User experiencing connection retries resulting in access bursts and failed attempts"
+        ],
+        "employee_summary": "The account exhibits a suspicious burst of access requests, repeated denials, and a high-value transfer outlier, matching fraud-like patterns such as potential account takeover.",
+        "customer_reason_code": "SECURITY_REVIEW",
+        "requires_human_review": true
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 1.211
+    },
+    {
+      "id": "takeover-4",
+      "simulated": true,
+      "anomaly_score": 0.8921,
+      "rule_score": 1.0,
+      "risk_score": 76,
+      "requires_review": false,
+      "reason_codes": [
+        "ACCESS_BURST",
+        "GEMINI_FRAUD_LIKE",
+        "NEW_CONTRACT_SPIKE",
+        "REPEATED_DENIALS",
+        "VALUE_OUTLIER"
+      ],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "SUSPICIOUS_FRAUD_LIKE",
+        "confidence": 0.85,
+        "semantic_risk": 75,
+        "supporting_indicators": [
+          "High anomaly score of 0.8921",
+          "8 failed access attempts",
+          "Access requests 35x above baseline",
+          "Transaction count 20x above baseline",
+          "Transfer value z-score of 6.0",
+          "Hard flags triggered for ACCESS_BURST, REPEATED_DENIALS, and VALUE_OUTLIER"
+        ],
+        "benign_explanations": [
+          "An automated script or integration interacting with the resource experiencing configuration issues leading to retries.",
+          "A legitimate user experiencing connectivity problems resulting in repeated failed attempts and subsequent burst actions upon reconnection."
+        ],
+        "employee_summary": "The account exhibited a sudden burst of access requests, repeated access denials, and a high-value transfer anomaly, triggering indicators consistent with potential unauthorized account access or fraudulent patterns.",
+        "customer_reason_code": "SECURITY_REVIEW",
+        "requires_human_review": true
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 2.03
+    },
+    {
+      "id": "takeover-5",
+      "simulated": true,
+      "anomaly_score": 0.8921,
+      "rule_score": 1.0,
+      "risk_score": 76,
+      "requires_review": false,
+      "reason_codes": [
+        "ACCESS_BURST",
+        "GEMINI_FRAUD_LIKE",
+        "NEW_CONTRACT_SPIKE",
+        "REPEATED_DENIALS",
+        "VALUE_OUTLIER"
+      ],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "SUSPICIOUS_FRAUD_LIKE",
+        "confidence": 0.85,
+        "semantic_risk": 75,
+        "supporting_indicators": [
+          "High anomaly score of 0.8921",
+          "Access requests 10m ratio is 30.0 times baseline",
+          "Transaction count 10m ratio is 14.0 times baseline",
+          "Six failed access attempts detected",
+          "Transfer value z-score is 4.5",
+          "Hard flags triggered for ACCESS_BURST, REPEATED_DENIALS, and VALUE_OUTLIER"
+        ],
+        "benign_explanations": [
+          "Automated trading bot or script executing high-frequency batch transactions during market volatility",
+          "Legitimate user experiencing login or access issues due to incorrect credentials followed by a large portfolio rebalancing"
+        ],
+        "employee_summary": "The account exhibits sudden high-frequency activity, repeated access denials, and a significant value outlier, matching potential account takeover patterns while also aligning with automated bot behavior.",
+        "customer_reason_code": "UNUSUAL_ACTIVITY",
+        "requires_human_review": true
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 1.249
+    },
+    {
+      "id": "typology-1",
+      "simulated": true,
+      "anomaly_score": 0.9335,
+      "rule_score": 1.0,
+      "risk_score": 78,
+      "requires_review": false,
+      "reason_codes": [
+        "ACCESS_BURST",
+        "GEMINI_FRAUD_LIKE",
+        "NEW_CONTRACT_SPIKE",
+        "REPEATED_DENIALS",
+        "VALUE_OUTLIER"
+      ],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "SUSPICIOUS_FRAUD_LIKE",
+        "confidence": 0.85,
+        "semantic_risk": 75,
+        "supporting_indicators": [
+          "High anomaly score of 0.9335",
+          "Access burst with 15 requests in 10 minutes",
+          "Repeated access denials and 4 failed access counts",
+          "Interaction with a flagged counterparty",
+          "High transfer value z-score of 4.0",
+          "New contract ratio spike"
+        ],
+        "benign_explanations": [
+          "An automated script or integration testing new smart contracts rapidly in a short time frame.",
+          "A legitimate user experiencing connectivity issues causing repeated failed access attempts and rapid retries."
+        ],
+        "employee_summary": "The account exhibits multiple hard flags including an access burst, repeated access denials, interaction with a flagged counterparty, and a value outlier, aligning with suspicious fraud-like patterns such as potential account takeover.",
+        "customer_reason_code": "SECURITY_REVIEW",
+        "requires_human_review": true
+      },
+      "category_matches_fixture": false,
+      "elapsed_seconds": 1.596
+    },
+    {
+      "id": "typology-2",
+      "simulated": true,
+      "anomaly_score": 0.9449,
+      "rule_score": 1.0,
+      "risk_score": 79,
+      "requires_review": false,
+      "reason_codes": [
+        "ACCESS_BURST",
+        "GEMINI_FRAUD_LIKE",
+        "NEW_CONTRACT_SPIKE",
+        "REPEATED_DENIALS",
+        "VALUE_OUTLIER"
+      ],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "SUSPICIOUS_FRAUD_LIKE",
+        "confidence": 0.85,
+        "semantic_risk": 75,
+        "supporting_indicators": [
+          "High anomaly score of 0.94",
+          "Multiple hard flags including ACCESS_BURST, FLAGGED_COUNTERPARTY, REPEATED_DENIALS, and VALUE_OUTLIER",
+          "Elevated transaction frequency and failed access attempts within a short timeframe",
+          "Interactions with flagged counterparties and high transfer value z-score"
+        ],
+        "benign_explanations": [
+          "Automated trading or script execution causing rapid transaction bursts and interaction with newly deployed contracts",
+          "Legitimate user experiencing authentication or connectivity issues resulting in repeated access denials",
+          "High-frequency portfolio management by the account holder during volatile market conditions"
+        ],
+        "employee_summary": "The account exhibits multiple high-risk indicators including an access burst, repeated access denials, interaction with flagged counterparties, and a significant value outlier. While these patterns align with suspicious activity such as potential account takeover, they could also stem from automated scripts or high-frequency trading behaviors. Human review is recommended to verify context.",
+        "customer_reason_code": "SECURITY_REVIEW",
+        "requires_human_review": true
+      },
+      "category_matches_fixture": false,
+      "elapsed_seconds": 1.472
+    },
+    {
+      "id": "typology-3",
+      "simulated": true,
+      "anomaly_score": 0.9449,
+      "rule_score": 1.0,
+      "risk_score": 79,
+      "requires_review": false,
+      "reason_codes": [
+        "ACCESS_BURST",
+        "GEMINI_FRAUD_LIKE",
+        "NEW_CONTRACT_SPIKE",
+        "REPEATED_DENIALS",
+        "VALUE_OUTLIER"
+      ],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "SUSPICIOUS_FRAUD_LIKE",
+        "confidence": 0.85,
+        "semantic_risk": 75,
+        "supporting_indicators": [
+          "High anomaly score of 0.94",
+          "Multiple hard flags including ACCESS_BURST, FLAGGED_COUNTERPARTY, REPEATED_DENIALS, and VALUE_OUTLIER",
+          "Significant transaction volume increase with 25 transactions in 10 minutes",
+          "Interaction with a flagged counterparty",
+          "High transfer value z-score of 6.0"
+        ],
+        "benign_explanations": [
+          "An automated script or trading bot executing a high volume of transactions rapidly",
+          "A legitimate user experiencing connectivity issues causing repeated access denials and retries"
+        ],
+        "employee_summary": "The account exhibits multiple high-risk indicators including an access burst, repeated access denials, interaction with a flagged counterparty, and a value outlier, suggesting potential unauthorized access or suspicious fraud-like patterns requiring security review.",
+        "customer_reason_code": "SECURITY_REVIEW",
+        "requires_human_review": true
+      },
+      "category_matches_fixture": false,
+      "elapsed_seconds": 1.536
+    },
+    {
+      "id": "typology-4",
+      "simulated": true,
+      "anomaly_score": 0.9449,
+      "rule_score": 1.0,
+      "risk_score": 79,
+      "requires_review": false,
+      "reason_codes": [
+        "ACCESS_BURST",
+        "GEMINI_FRAUD_LIKE",
+        "NEW_CONTRACT_SPIKE",
+        "REPEATED_DENIALS",
+        "VALUE_OUTLIER"
+      ],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "SUSPICIOUS_FRAUD_LIKE",
+        "confidence": 0.85,
+        "semantic_risk": 75,
+        "supporting_indicators": [
+          "High anomaly score of 0.94",
+          "Access burst with 35 transactions in 10 minutes",
+          "Seven failed access attempts",
+          "Interaction with two flagged counterparties",
+          "High transfer value z-score of 7.0",
+          "Spike in new contract interactions"
+        ],
+        "benign_explanations": [
+          "An automated script or trading bot executing rapid portfolio rebalancing during high market volatility",
+          "A legitimate user attempting to recover access after forgetting credentials, resulting in repeated denials"
+        ],
+        "employee_summary": "The account exhibits strong behavioral anomalies including an access burst, repeated access denials, interaction with flagged counterparties, and high-value transfers. While these indicators align with potential account takeover or fraud patterns, they could also reflect automated trading strategies or credential recovery issues. Human review is recommended to confirm legitimacy.",
+        "customer_reason_code": "SECURITY_REVIEW",
+        "requires_human_review": true
+      },
+      "category_matches_fixture": false,
+      "elapsed_seconds": 1.502
+    },
+    {
+      "id": "typology-5",
+      "simulated": true,
+      "anomaly_score": 0.9335,
+      "rule_score": 1.0,
+      "risk_score": 78,
+      "requires_review": false,
+      "reason_codes": [
+        "ACCESS_BURST",
+        "GEMINI_FRAUD_LIKE",
+        "NEW_CONTRACT_SPIKE",
+        "REPEATED_DENIALS",
+        "VALUE_OUTLIER"
+      ],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "SUSPICIOUS_FRAUD_LIKE",
+        "confidence": 0.85,
+        "semantic_risk": 75,
+        "supporting_indicators": [
+          "High anomaly score of 0.93",
+          "Failed access count of 3",
+          "Access burst and transfer value z-score of 3.5",
+          "Interaction with flagged counterparty"
+        ],
+        "benign_explanations": [
+          "The user might be deploying a new set of contracts rapidly in an automated workflow.",
+          "Legitimate high-frequency trading or portfolio rebalancing causing transaction spikes."
+        ],
+        "employee_summary": "The account exhibits multiple risk indicators including an access burst, repeated access denials, high transfer value, and interaction with a flagged counterparty, suggesting possible unauthorized access or suspicious fraud-like behavior.",
+        "customer_reason_code": "SECURITY_REVIEW",
+        "requires_human_review": true
+      },
+      "category_matches_fixture": false,
+      "elapsed_seconds": 1.22
+    },
+    {
+      "id": "ambiguous-1",
+      "simulated": true,
+      "anomaly_score": 0.0,
+      "rule_score": 0.0,
+      "risk_score": 0,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "fallback",
+      "triage": null,
+      "category_matches_fixture": null,
+      "elapsed_seconds": 0.12
+    },
+    {
+      "id": "ambiguous-2",
+      "simulated": true,
+      "anomaly_score": 0.1918,
+      "rule_score": 0.0,
+      "risk_score": 12,
+      "requires_review": true,
+      "reason_codes": [
+        "LOW_CONFIDENCE_REVIEW"
+      ],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "INSUFFICIENT_EVIDENCE",
+        "confidence": 0.75,
+        "semantic_risk": 20,
+        "supporting_indicators": [
+          "low history confidence",
+          "slight increase in transaction frequency over baseline",
+          "zero failed access attempts"
+        ],
+        "benign_explanations": [
+          "increased activity due to routine batch processing or testing",
+          "new user or wallet interacting with multiple smart contracts normally"
+        ],
+        "employee_summary": "The activity shows a minor increase in transaction frequency compared to baseline, but historical data is limited and there are no hard flags or failed access attempts. Due to low history confidence, insufficient evidence prevents a definitive classification, and human review is recommended.",
+        "customer_reason_code": "NONE",
+        "requires_human_review": true
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 1.074
+    },
+    {
+      "id": "ambiguous-3",
+      "simulated": true,
+      "anomaly_score": 0.383,
+      "rule_score": 0.0,
+      "risk_score": 20,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "fallback",
+      "triage": null,
+      "category_matches_fixture": null,
+      "elapsed_seconds": 0.12
+    },
+    {
+      "id": "ambiguous-4",
+      "simulated": true,
+      "anomaly_score": 0.0377,
+      "rule_score": 0.0,
+      "risk_score": 2,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "fallback",
+      "triage": null,
+      "category_matches_fixture": null,
+      "elapsed_seconds": 0.109
+    },
+    {
+      "id": "ambiguous-5",
+      "simulated": true,
+      "anomaly_score": 0.4347,
+      "rule_score": 0.0,
+      "risk_score": 23,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "fallback",
+      "triage": null,
+      "category_matches_fixture": null,
+      "elapsed_seconds": 0.119
+    }
+  ],
+  "summary": {
+    "accepted_fraction": 0.84,
+    "fixture_match_count": 16,
+    "fixture_mismatch_ids": [
+      "typology-1",
+      "typology-2",
+      "typology-3",
+      "typology-4",
+      "typology-5"
+    ],
+    "unavailable_ids": [
+      "ambiguous-1",
+      "ambiguous-3",
+      "ambiguous-4",
+      "ambiguous-5"
+    ],
+    "latency_seconds": {
+      "50": 1.336,
+      "95": 2.03,
+      "100": 8.342
+    }
+  }
+}

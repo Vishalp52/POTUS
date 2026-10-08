@@ -1,0 +1,15 @@
+weights:
+  anomaly: 0.45
+  rules: 0.25
+  threat_similarity: 0.15
+  gemini_semantic: 0.15
+
+thresholds:
+  allow_max: 34
+  challenge_max: 54
+  review_max: 74
+
+controls:
+  restrict_ttl_minutes: 20
+  gemini_min_confidence_for_severity: 0.70
+  low_confidence_high_severity_action: REVIEW

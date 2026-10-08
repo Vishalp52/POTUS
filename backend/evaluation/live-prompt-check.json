@@ -1,0 +1,95 @@
+{
+  "mode": "live",
+  "prompt_version": "potus-triage-v5",
+  "evaluated_at": "2026-10-08T01:13:00.541730+00:00",
+  "model": "gemini-3.5-flash-lite",
+  "api": "generate_content",
+  "timeout_seconds": 12.0,
+  "thinking_level": "low",
+  "request_interval_seconds": 3.1,
+  "packet_count": 2,
+  "accepted_triage_count": 2,
+  "summary": {
+    "accepted_fraction": 1.0,
+    "fixture_match_count": 0,
+    "fixture_mismatch_ids": [
+      "slight-1",
+      "typology-1"
+    ],
+    "unavailable_ids": [],
+    "latency_seconds": {
+      "50": 1.401,
+      "95": 1.52,
+      "100": 1.52
+    }
+  },
+  "limitations": "Synthetic review fixtures, not a production accuracy benchmark. Offline mode does not test Gemini semantics.",
+  "results": [
+    {
+      "id": "slight-1",
+      "simulated": true,
+      "anomaly_score": 0.2921,
+      "rule_score": 0.0,
+      "risk_score": 15,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "NORMAL_OR_BENIGN",
+        "confidence": 0.85,
+        "semantic_risk": 15,
+        "supporting_indicators": [
+          "Slight increase in transaction frequency over 10-minute and 1-hour windows",
+          "No failed access attempts or hard security flags present",
+          "Transfer value z-score remains within normal bounds at 0.5"
+        ],
+        "benign_explanations": [
+          "The user may be executing batch transactions or interacting with multiple smart contracts during a standard workflow.",
+          "Automated scripts or routine polling could account for the temporary uptick in transaction frequency."
+        ],
+        "employee_summary": "The activity shows a minor variance in transaction volume and contract interaction frequency without any failed accesses, flagged counterparties, or hard security flags. This is consistent with normal user behavior or standard automated processing.",
+        "customer_reason_code": "NONE",
+        "requires_human_review": false
+      },
+      "category_matches_fixture": false,
+      "elapsed_seconds": 1.401
+    },
+    {
+      "id": "typology-1",
+      "simulated": true,
+      "anomaly_score": 0.9335,
+      "rule_score": 1.0,
+      "risk_score": 79,
+      "requires_review": false,
+      "reason_codes": [
+        "ACCESS_BURST",
+        "GEMINI_FRAUD_LIKE",
+        "NEW_CONTRACT_SPIKE",
+        "REPEATED_DENIALS",
+        "VALUE_OUTLIER"
+      ],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "SUSPICIOUS_FRAUD_LIKE",
+        "confidence": 0.88,
+        "semantic_risk": 82,
+        "supporting_indicators": [
+          "High anomaly score of 0.93",
+          "Access requests spiked by 15x compared to baseline",
+          "Four failed access attempts indicating repeated denials",
+          "Interaction with a flagged counterparty",
+          "Transfer value z-score of 4.0 denoting a significant value outlier"
+        ],
+        "benign_explanations": [
+          "An automated script or integration interacting rapidly with new contracts during legitimate deployment",
+          "A user experiencing repeated authentication friction while attempting urgent valid transactions"
+        ],
+        "employee_summary": "The account exhibits multiple indicators of potential access abuse and suspicious value movement, including an access burst, repeated access denials, a flagged counterparty, and a value outlier. Because these signals match both account takeover and flagged value movement patterns, further review is required to rule out automated bot activity or unauthorized access.",
+        "customer_reason_code": "SECURITY_REVIEW",
+        "requires_human_review": true
+      },
+      "category_matches_fixture": false,
+      "elapsed_seconds": 1.52
+    }
+  ]
+}

@@ -1,0 +1,477 @@
+[
+  {
+    "id": "normal-1",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 1,
+      "tx_count_1h": 5,
+      "unique_contracts_24h": 2,
+      "new_contract_ratio": 0.1,
+      "transfer_value_zscore": 0,
+      "access_requests_10m": 1,
+      "failed_access_count": 0,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "NORMAL_OR_BENIGN"
+    ],
+    "rationale": "Ordinary variation without corroborating signals."
+  },
+  {
+    "id": "normal-2",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 2,
+      "tx_count_1h": 8,
+      "unique_contracts_24h": 4,
+      "new_contract_ratio": 0.2,
+      "transfer_value_zscore": 0.1,
+      "access_requests_10m": 1,
+      "failed_access_count": 0,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "NORMAL_OR_BENIGN"
+    ],
+    "rationale": "Ordinary variation without corroborating signals."
+  },
+  {
+    "id": "normal-3",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 3,
+      "tx_count_1h": 10,
+      "unique_contracts_24h": 4,
+      "new_contract_ratio": 0.15,
+      "transfer_value_zscore": 0.5,
+      "access_requests_10m": 1,
+      "failed_access_count": 0,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "NORMAL_OR_BENIGN"
+    ],
+    "rationale": "Ordinary variation without corroborating signals."
+  },
+  {
+    "id": "normal-4",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 1,
+      "tx_count_1h": 6,
+      "unique_contracts_24h": 3,
+      "new_contract_ratio": 0.2,
+      "transfer_value_zscore": -0.5,
+      "access_requests_10m": 2,
+      "failed_access_count": 0,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "NORMAL_OR_BENIGN"
+    ],
+    "rationale": "Ordinary variation without corroborating signals."
+  },
+  {
+    "id": "normal-5",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 2,
+      "tx_count_1h": 9,
+      "unique_contracts_24h": 5,
+      "new_contract_ratio": 0.25,
+      "transfer_value_zscore": 0.2,
+      "access_requests_10m": 1,
+      "failed_access_count": 0,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "NORMAL_OR_BENIGN"
+    ],
+    "rationale": "Ordinary variation without corroborating signals."
+  },
+  {
+    "id": "slight-1",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 6,
+      "tx_count_1h": 15,
+      "unique_contracts_24h": 6,
+      "new_contract_ratio": 0.3,
+      "transfer_value_zscore": 0.5,
+      "access_requests_10m": 2,
+      "failed_access_count": 0,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "SLIGHT_ANOMALY"
+    ],
+    "rationale": "Moderate burst with plausible batch activity."
+  },
+  {
+    "id": "slight-2",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 7,
+      "tx_count_1h": 18,
+      "unique_contracts_24h": 7,
+      "new_contract_ratio": 0.35,
+      "transfer_value_zscore": 1,
+      "access_requests_10m": 3,
+      "failed_access_count": 0,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "SLIGHT_ANOMALY"
+    ],
+    "rationale": "Moderate burst with plausible batch activity."
+  },
+  {
+    "id": "slight-3",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 5,
+      "tx_count_1h": 20,
+      "unique_contracts_24h": 8,
+      "new_contract_ratio": 0.4,
+      "transfer_value_zscore": 0.8,
+      "access_requests_10m": 3,
+      "failed_access_count": 1,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "SLIGHT_ANOMALY"
+    ],
+    "rationale": "Moderate burst with plausible batch activity."
+  },
+  {
+    "id": "slight-4",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 8,
+      "tx_count_1h": 22,
+      "unique_contracts_24h": 7,
+      "new_contract_ratio": 0.4,
+      "transfer_value_zscore": 1.5,
+      "access_requests_10m": 2,
+      "failed_access_count": 0,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "SLIGHT_ANOMALY"
+    ],
+    "rationale": "Moderate burst with plausible batch activity."
+  },
+  {
+    "id": "slight-5",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 6,
+      "tx_count_1h": 16,
+      "unique_contracts_24h": 6,
+      "new_contract_ratio": 0.3,
+      "transfer_value_zscore": 2,
+      "access_requests_10m": 4,
+      "failed_access_count": 1,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "SLIGHT_ANOMALY"
+    ],
+    "rationale": "Moderate burst with plausible batch activity."
+  },
+  {
+    "id": "takeover-1",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 38,
+      "tx_count_1h": 45,
+      "unique_contracts_24h": 14,
+      "new_contract_ratio": 0.8,
+      "transfer_value_zscore": 4,
+      "access_requests_10m": 40,
+      "failed_access_count": 6,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "SUSPICIOUS_FRAUD_LIKE"
+    ],
+    "rationale": "Multiple access, value, and novelty indicators."
+  },
+  {
+    "id": "takeover-2",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 30,
+      "tx_count_1h": 40,
+      "unique_contracts_24h": 12,
+      "new_contract_ratio": 0.7,
+      "transfer_value_zscore": 5,
+      "access_requests_10m": 30,
+      "failed_access_count": 4,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "SUSPICIOUS_FRAUD_LIKE"
+    ],
+    "rationale": "Multiple access, value, and novelty indicators."
+  },
+  {
+    "id": "takeover-3",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 25,
+      "tx_count_1h": 35,
+      "unique_contracts_24h": 10,
+      "new_contract_ratio": 0.65,
+      "transfer_value_zscore": 3.5,
+      "access_requests_10m": 20,
+      "failed_access_count": 5,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "SUSPICIOUS_FRAUD_LIKE"
+    ],
+    "rationale": "Multiple access, value, and novelty indicators."
+  },
+  {
+    "id": "takeover-4",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 40,
+      "tx_count_1h": 55,
+      "unique_contracts_24h": 18,
+      "new_contract_ratio": 0.9,
+      "transfer_value_zscore": 6,
+      "access_requests_10m": 35,
+      "failed_access_count": 8,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "SUSPICIOUS_FRAUD_LIKE"
+    ],
+    "rationale": "Multiple access, value, and novelty indicators."
+  },
+  {
+    "id": "takeover-5",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 28,
+      "tx_count_1h": 40,
+      "unique_contracts_24h": 12,
+      "new_contract_ratio": 0.7,
+      "transfer_value_zscore": 4.5,
+      "access_requests_10m": 30,
+      "failed_access_count": 6,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "SUSPICIOUS_FRAUD_LIKE"
+    ],
+    "rationale": "Multiple access, value, and novelty indicators."
+  },
+  {
+    "id": "typology-1",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 20,
+      "tx_count_1h": 30,
+      "unique_contracts_24h": 10,
+      "new_contract_ratio": 0.6,
+      "transfer_value_zscore": 4,
+      "access_requests_10m": 15,
+      "failed_access_count": 4,
+      "flagged_counterparty_count": 1
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "POTENTIAL_ILLICIT_ACTIVITY"
+    ],
+    "rationale": "Flagged counterparties and unusual value match configured typology; no legal conclusion."
+  },
+  {
+    "id": "typology-2",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 30,
+      "tx_count_1h": 40,
+      "unique_contracts_24h": 15,
+      "new_contract_ratio": 0.75,
+      "transfer_value_zscore": 5,
+      "access_requests_10m": 20,
+      "failed_access_count": 5,
+      "flagged_counterparty_count": 2
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "POTENTIAL_ILLICIT_ACTIVITY"
+    ],
+    "rationale": "Flagged counterparties and unusual value match configured typology; no legal conclusion."
+  },
+  {
+    "id": "typology-3",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 25,
+      "tx_count_1h": 35,
+      "unique_contracts_24h": 12,
+      "new_contract_ratio": 0.7,
+      "transfer_value_zscore": 6,
+      "access_requests_10m": 20,
+      "failed_access_count": 6,
+      "flagged_counterparty_count": 1
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "POTENTIAL_ILLICIT_ACTIVITY"
+    ],
+    "rationale": "Flagged counterparties and unusual value match configured typology; no legal conclusion."
+  },
+  {
+    "id": "typology-4",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 35,
+      "tx_count_1h": 45,
+      "unique_contracts_24h": 15,
+      "new_contract_ratio": 0.8,
+      "transfer_value_zscore": 7,
+      "access_requests_10m": 25,
+      "failed_access_count": 7,
+      "flagged_counterparty_count": 2
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "POTENTIAL_ILLICIT_ACTIVITY"
+    ],
+    "rationale": "Flagged counterparties and unusual value match configured typology; no legal conclusion."
+  },
+  {
+    "id": "typology-5",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 18,
+      "tx_count_1h": 25,
+      "unique_contracts_24h": 10,
+      "new_contract_ratio": 0.6,
+      "transfer_value_zscore": 3.5,
+      "access_requests_10m": 12,
+      "failed_access_count": 3,
+      "flagged_counterparty_count": 1
+    },
+    "history_confidence": "normal",
+    "expected_categories": [
+      "POTENTIAL_ILLICIT_ACTIVITY"
+    ],
+    "rationale": "Flagged counterparties and unusual value match configured typology; no legal conclusion."
+  },
+  {
+    "id": "ambiguous-1",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 4,
+      "tx_count_1h": 10,
+      "unique_contracts_24h": 4,
+      "new_contract_ratio": 0.2,
+      "transfer_value_zscore": 0.5,
+      "access_requests_10m": 2,
+      "failed_access_count": 0,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "low",
+    "expected_categories": [
+      "INSUFFICIENT_EVIDENCE"
+    ],
+    "rationale": "Partial history with weak/conflicting signals; human review or insufficient evidence."
+  },
+  {
+    "id": "ambiguous-2",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 6,
+      "tx_count_1h": 12,
+      "unique_contracts_24h": 5,
+      "new_contract_ratio": 0.3,
+      "transfer_value_zscore": 1,
+      "access_requests_10m": 2,
+      "failed_access_count": 0,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "low",
+    "expected_categories": [
+      "INSUFFICIENT_EVIDENCE"
+    ],
+    "rationale": "Partial history with weak/conflicting signals; human review or insufficient evidence."
+  },
+  {
+    "id": "ambiguous-3",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 5,
+      "tx_count_1h": 14,
+      "unique_contracts_24h": 6,
+      "new_contract_ratio": 0.3,
+      "transfer_value_zscore": 0.5,
+      "access_requests_10m": 3,
+      "failed_access_count": 1,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "low",
+    "expected_categories": [
+      "INSUFFICIENT_EVIDENCE"
+    ],
+    "rationale": "Partial history with weak/conflicting signals; human review or insufficient evidence."
+  },
+  {
+    "id": "ambiguous-4",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 3,
+      "tx_count_1h": 8,
+      "unique_contracts_24h": 4,
+      "new_contract_ratio": 0.2,
+      "transfer_value_zscore": 1,
+      "access_requests_10m": 2,
+      "failed_access_count": 1,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "low",
+    "expected_categories": [
+      "INSUFFICIENT_EVIDENCE"
+    ],
+    "rationale": "Partial history with weak/conflicting signals; human review or insufficient evidence."
+  },
+  {
+    "id": "ambiguous-5",
+    "simulated": true,
+    "features": {
+      "tx_count_10m": 7,
+      "tx_count_1h": 15,
+      "unique_contracts_24h": 6,
+      "new_contract_ratio": 0.35,
+      "transfer_value_zscore": 1.5,
+      "access_requests_10m": 3,
+      "failed_access_count": 0,
+      "flagged_counterparty_count": 0
+    },
+    "history_confidence": "low",
+    "expected_categories": [
+      "INSUFFICIENT_EVIDENCE"
+    ],
+    "rationale": "Partial history with weak/conflicting signals; human review or insufficient evidence."
+  }
+]

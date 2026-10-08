@@ -1,0 +1,59 @@
+[
+  {
+    "model": "gemini-flash-latest",
+    "finish": [
+      "FinishReason.STOP"
+    ],
+    "triage": {
+      "category": "SUSPICIOUS_FRAUD_LIKE",
+      "confidence": 0.82,
+      "semantic_risk": 80,
+      "supporting_indicators": [
+        "Repeated access denials with failed access count of 6",
+        "Transaction frequency burst of 38 transactions within 10 minutes compared to baseline of 3",
+        "Transfer value z-score outlier at 3.9",
+        "High ratio of interactions with new contracts at 0.71 versus 0.16 baseline",
+        "Flags triggered: ACCESS_BURST, VALUE_OUTLIER, REPEATED_DENIALS"
+      ],
+      "benign_explanations": [
+        "Automated trading script or deployment tooling misconfiguration resulting in repeated failed calls and burst interactions",
+        "User experiencing network connectivity or authentication synchronization problems during high-volume batch operations",
+        "Legitimate liquidity provisioning or smart contract testing involving unindexed contracts"
+      ],
+      "employee_summary": "Activity exhibits significant deviations including elevated transaction frequency, high value outlier transfers, increased new contract interaction, and several failed access attempts. No matched typologies for illicit classification are present; triage suggests fraud-like anomaly requiring human review.",
+      "customer_reason_code": "SECURITY_REVIEW",
+      "requires_human_review": true
+    },
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 238,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 291,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 291
+        }
+      ],
+      "thoughts_token_count": 466,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 995,
+      "traffic_type": null
+    },
+    "seconds": 6.85
+  },
+  {
+    "model": "gemini-2.5-flash",
+    "error": "ClientError",
+    "code": 404,
+    "seconds": 0.2
+  },
+  {
+    "model": "gemini-3.8-flash",
+    "error": "ServerError",
+    "code": 503,
+    "seconds": 6.84
+  }
+]

@@ -1,0 +1,39 @@
+{
+  "model": {
+    "model": "IsolationForest",
+    "model_schema_version": "iforest-v2",
+    "sklearn_version": "1.9.1",
+    "n_estimators": 300,
+    "random_state": 42,
+    "features": [
+      "tx_count_10m",
+      "tx_count_1h",
+      "unique_contracts_24h",
+      "new_contract_ratio",
+      "transfer_value_zscore",
+      "access_requests_10m",
+      "failed_access_count",
+      "flagged_counterparty_count"
+    ],
+    "vector_version": "v1-8f",
+    "trained_on": "csv:normal_wallets.csv",
+    "training_fingerprint": "sha256:768ca4be07adf47bb497afa70ae309eae0455c310b86f098570eb89da1b33c72",
+    "calibration": {
+      "low": -0.0608,
+      "high": 0.32053
+    }
+  },
+  "training_rows": 1000,
+  "holdout_rows": 200,
+  "trained_at": "2026-10-08T01:11:27.362979+00:00",
+  "holdout_training_rows": 800,
+  "data_provenance": "Supplied synthetic normal-wallet fixture; no verified real attack labels.",
+  "holdout_anomaly_percentiles": {
+    "50": 0.0,
+    "90": 0.1665,
+    "95": 0.217,
+    "99": 0.3578
+  },
+  "holdout_gemini_trigger_fraction_at_035": 0.015,
+  "limitations": "Normal-only calibration; no validated attack labels or production accuracy claims. Final artifact is fitted to all normal rows."
+}

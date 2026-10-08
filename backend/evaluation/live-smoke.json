@@ -1,0 +1,56 @@
+{
+  "mode": "live",
+  "prompt_version": "potus-triage-v4",
+  "evaluated_at": "2026-10-08T01:14:58.705720+00:00",
+  "model": "gemini-3.5-flash-lite",
+  "api": "generate_content",
+  "timeout_seconds": 12.0,
+  "thinking_level": "low",
+  "request_interval_seconds": 3.1,
+  "packet_count": 1,
+  "accepted_triage_count": 1,
+  "summary": {
+    "accepted_fraction": 1.0,
+    "fixture_match_count": 1,
+    "fixture_mismatch_ids": [],
+    "unavailable_ids": [],
+    "latency_seconds": {
+      "50": 1.281,
+      "95": 1.281,
+      "100": 1.281
+    }
+  },
+  "limitations": "Synthetic review fixtures, not a production accuracy benchmark. Offline mode does not test Gemini semantics.",
+  "results": [
+    {
+      "id": "normal-1",
+      "simulated": true,
+      "anomaly_score": 0.0,
+      "rule_score": 0.0,
+      "risk_score": 1,
+      "requires_review": false,
+      "reason_codes": [],
+      "gemini_status": "ok",
+      "triage": {
+        "category": "NORMAL_OR_BENIGN",
+        "confidence": 0.95,
+        "semantic_risk": 5,
+        "supporting_indicators": [
+          "Anomaly score is zero",
+          "Zero failed access attempts",
+          "No hard security flags present",
+          "Activity levels are within or below baseline expectations"
+        ],
+        "benign_explanations": [
+          "Routine user interaction with standard transaction volumes",
+          "Normal variance in daily blockchain operations"
+        ],
+        "employee_summary": "The evaluated activity shows no signs of anomalous or risky behavior, with all metrics resting comfortably within normal baseline parameters.",
+        "customer_reason_code": "NONE",
+        "requires_human_review": false
+      },
+      "category_matches_fixture": true,
+      "elapsed_seconds": 1.281
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "model": "gemini-flash-latest",
+    "compact_schema": true,
+    "finish": [
+      "FinishReason.STOP"
+    ],
+    "triage": {
+      "category": "NORMAL_OR_BENIGN",
+      "confidence": 0.95,
+      "semantic_risk": 10,
+      "supporting_indicators": [
+        "Low anomaly score of 0.1",
+        "No hard flags present",
+        "No typology matches identified"
+      ],
+      "benign_explanations": [
+        "Standard operational behavior with no significant variance from baseline."
+      ],
+      "employee_summary": "Telemetry shows baseline behavior with no matched typologies or elevated risk flags.",
+      "customer_reason_code": "NONE",
+      "requires_human_review": false
+    },
+    "seconds": 7.31
+  },
+  {
+    "model": "gemini-3.5-flash-lite",
+    "compact_schema": true,
+    "finish": [
+      "FinishReason.STOP"
+    ],
+    "triage": {
+      "category": "NORMAL_OR_BENIGN",
+      "confidence": 0.95,
+      "semantic_risk": 5,
+      "supporting_indicators": [
+        "anomaly_score is very low at 0.1",
+        "no hard flags present",
+        "history confidence is normal",
+        "no matched typologies"
+      ],
+      "benign_explanations": [
+        "Standard user behavior with no deviation from baseline patterns."
+      ],
+      "employee_summary": "The activity shows no signs of anomaly or risk, fitting standard operating parameters.",
+      "customer_reason_code": "NONE",
+      "requires_human_review": false
+    },
+    "seconds": 1.1
+  },
+  {
+    "model": "gemini-3.7-flash",
+    "compact_schema": true,
+    "error": "ServerError",
+    "code": 504,
+    "seconds": 19.12
+  }
+]
